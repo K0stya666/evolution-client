@@ -1,0 +1,29 @@
+/* src/styles.css */
+
+body {
+    margin: 0;
+    font-family: 'Mulish', sans-serif;
+    background-color: #f4f4f4;
+}
+
+h2, h3, h4 {
+    margin: 0.5rem 0;
+}
+
+.card {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+.food-token {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* ... и т.д. */
