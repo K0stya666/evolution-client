@@ -15,7 +15,7 @@
 //
 //     useEffect(() => {
 //         // Подключаемся к /ws на сервере
-//         const socket = new SockJS('http://localhost:8080/ws');
+//         const scket = new SockJS('http://localhost:8080/ws');
 //         const client = over(socket);
 //
 //         // Устанавливаем соединение

@@ -1,37 +1,42 @@
-import axios from "axios";
-import { User } from "../types/user";
-import { GameState } from "../types/game";
+import axios from 'axios';
+import { User } from '../types/user';
+import { GameState } from '../types/game';
 
-// Базовый инстанс axios
-const apiClient = axios.create({
-    baseURL: "http://localhost:5137/api", // или ваш URL
-    withCredentials: true, // если нужно передавать куки
+const API_URL = 'http://localhost:8080/app';
+
+const api = axios.create({
+    baseURL: API_URL,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
-// Пример функций для взаимодействия с сервером
+export const authApi = {
+    register: async (login: string, password: string): Promise<User> => {
+        const response = await api.post('/register', { login, password });
+        return response.data;
+    },
 
-// Регистрация
-export async function registerUser(username: string, password: string): Promise<User> {
-    const response = await apiClient.post("/auth/register", { username, password });
-    return response.data;
-}
+    login: async (login: string, password: string): Promise<User> => {
+        const response = await api.post('/login', { login, password });
+        return response.data;
+    },
+};
 
-// Логин
-export async function loginUser(username: string, password: string): Promise<User> {
-    const response = await apiClient.post("/auth/login", { username, password });
-    return response.data;
-}
+export const gameApi = {
+    createGame: async (): Promise<GameState> => {
+        const response = await api.post('/api/games');
+        return response.data;
+    },
 
-// Получить текущее состояние игры
-export async function getGameState(gameId: string): Promise<GameState> {
-    const response = await apiClient.get(`/game/${gameId}`);
-    return response.data;
-}
+    getGame: async (id: string): Promise<GameState> => {
+        const response = await api.get(`/api/games/${id}`);
+        return response.data;
+    },
 
-// Создать новую игру
-export async function createGame(): Promise<GameState> {
-    const response = await apiClient.post("/game");
-    return response.data;
-}
-
-// Прочие методы: ход игрока, добавление карт, фаза питания и т.д.
+    updateGameStage: async (id: string, stage: string): Promise<GameState> => {
+        const response = await api.put(`/api/games/${id}/stage`, { stage });
+        return response.data;
+    },
+};
