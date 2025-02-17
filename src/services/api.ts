@@ -4,7 +4,7 @@ import { GameState } from "../types/game";
 
 // Базовый инстанс axios
 const apiClient = axios.create({
-    baseURL: "http://localhost:3000/api", // или ваш URL
+    baseURL: "http://localhost:5137/api", // или ваш URL
     withCredentials: true, // если нужно передавать куки
 });
 

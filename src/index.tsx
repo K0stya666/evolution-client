@@ -1,3 +1,5 @@
+import './global-fix';
+
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles.css"; // если у вас есть общий файл стилей

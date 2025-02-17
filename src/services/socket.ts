@@ -4,7 +4,7 @@ import { GameState } from "../types/game";
 let socket: Socket | null = null;
 
 export const connectSocket = (token: string) => {
-    socket = io("http://localhost:3000", {
+    socket = io("http://localhost:5173", {
         auth: {
             token,
         },

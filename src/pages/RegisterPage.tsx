@@ -1,28 +1,64 @@
-import React, { useState } from "react";
-import { registerUser } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Client, Message, over} from "stompjs";
+import SockJS from "sockjs-client";
+
+interface RegisterResponse {
+    status: string;
+    error?: string;
+}
 
 const RegisterPage: React.FC = () => {
+    const [stompClient, setStompClient] = useState<Client | null>(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
+    const [responseMsg, setResponseMsg] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await registerUser(username, password);
-            // после регистрации переходим на страницу логина или в лобби
-            navigate("/login");
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Ошибка регистрации");
+    useEffect(() => {
+        // Подключаемся к /ws на сервере
+        const socket = new SockJS('http://localhost:8080/ws');
+        const client = over(socket);
+
+        // Устанавливаем соединение
+        client.connect({}, () => {
+            console.log('Connected to STOMP');
+
+        }, (error) => {
+            console.error('Ошибка подключения STOMP: ', error);
+        });
+
+        setStompClient(client);
+
+        // Отключаемся при размонтировании компонента
+        return () => {
+            if (client.connected) {
+                client.disconnect(() => {
+                    console.log('Disconnected from STOMP');
+                });
+            }
+        };
+    }, []);
+
+    // Отправка формы
+    const handleRegister = (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!stompClient || !stompClient.connected) {
+            setResponseMsg('Нет подключения к серверу');
+            return;
         }
+
+        console.log(username, password);
+
+        stompClient.send('/app/register', {}, JSON.stringify({
+            username,
+            password,
+        }));
     };
 
+
     return (
-        <div className="register-page">
+        <div className="register-page" style={{ maxWidth: 400, margin: 'auto', padding: 20 }}>
             <h2>Регистрация</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleRegister}>
                 <div>
                     <label>Имя пользователя</label>
                     <input
@@ -41,9 +77,10 @@ const RegisterPage: React.FC = () => {
                         required
                     />
                 </div>
-                {error && <p className="error">{error}</p>}
+                {/*{error && <p className="error">{error}</p>}*/}
                 <button type="submit">Зарегистрироваться</button>
             </form>
+            {responseMsg && <p>{responseMsg}</p>}
         </div>
     );
 };
