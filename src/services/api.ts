@@ -5,7 +5,7 @@ import { User } from '../types/user';
 // import SockJS from "sockjs-client";
 // import {Stomp} from "@stomp/stompjs"
 
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://localhost:8080/app';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -14,23 +14,6 @@ const api = axios.create({
         'Content-Type': 'application/json',
     },
 });
-
-// export const connectWebSocket = (userId: string) => {
-//     const socket = new SockJS('http://localhost:8080/app/ws');
-//     stompClient = over(socket);
-//
-//     stompClient.connect({}, () => {
-//         console.log('WebSocket Connected for user:', userId);
-//
-//         // Подписка на персональные события пользователя
-//         stompClient?.subscribe(`/topic/user/${userId}`, (message) => {
-//             const data = JSON.parse(message.body);
-//             console.log('Received WebSocket Message:', data);
-//         });
-//     }, (error) => {
-//         console.error('WebSocket Error:', error);
-//     });
-// };
 
 export const authApi = {
     login: async (login: string, password: string): Promise<User> => {

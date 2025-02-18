@@ -1,12 +1,15 @@
+// RegisterForm.tsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi } from '../../services/api';
+import {authApi} from "../../services/api.ts";
 
 const RegisterForm: React.FC = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
