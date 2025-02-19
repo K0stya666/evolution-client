@@ -34,3 +34,9 @@ export interface GameState {
     foodBase: number;    // текущее количество фишек в кормовой базе
     round: number;
 }
+
+export interface Game {
+    id: number;
+    stage: string;
+    diceNumber: number;
+}

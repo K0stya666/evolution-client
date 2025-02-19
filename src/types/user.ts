@@ -1,5 +1,5 @@
 export interface User {
     id: string;
-    username: string;
+    login: string;
     token?: string; // JWT или другой токен
 }
