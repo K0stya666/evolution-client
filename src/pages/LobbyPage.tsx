@@ -1,59 +1,112 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authApi } from '../services/api';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const LoginForm: React.FC = () => {
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
+interface Game {
+    id: number;
+    stage: string;
+    diceNumber: number; // максимальное количество игроков
+}
+
+const LobbyPage: React.FC = () => {
+    const [games, setGames] = useState<Game[]>([]);
+    const [maxPlayers, setMaxPlayers] = useState(2);
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    // Функция получения списка игр (без токена)
+    const fetchGames = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/games');
+            setGames(response.data);
+        } catch (err: any) {
+            setError('Ошибка загрузки игр');
+        }
+    };
+
+    useEffect(() => {
+        fetchGames();
+        // Обновляем список каждые 5 секунд (в дальнейшем можно перейти на WebSocket)
+        const interval = setInterval(fetchGames, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // Создание игры (требуется авторизация)
+    const handleCreateGame = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await authApi.login(login, password);
-            navigate('/lobby');
+            const token = localStorage.getItem('token');
+            await axios.post(
+                `http://localhost:8080/games?maxPlayers=${maxPlayers}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            fetchGames();
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Login failed');
+            setError('Ошибка создания игры');
+        }
+    };
+
+    // Присоединение к игре (требуется авторизация)
+    const handleJoinGame = async (gameId: number) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(
+                `http://localhost:8080/games/${gameId}/join`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            fetchGames();
+        } catch (err: any) {
+            setError('Ошибка присоединения к игре');
         }
     };
 
     return (
-        <div className="min-h-screen bg-green-800 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h2 className="text-2xl font-bold mb-6 text-center">Вход</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Логин</label>
-                        <input
-                            type="text"
-                            value={login}
-                            onChange={(e) => setLogin(e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Пароль</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
-                            required
-                        />
-                    </div>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    <button
-                        type="submit"
-                        className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+        <div className="min-h-screen bg-gray-100 p-8">
+            <h2 className="text-2xl font-bold mb-4">Лобби</h2>
+            {error && <p className="text-red-500">{error}</p>}
+            <div className="mb-6">
+                <form onSubmit={handleCreateGame}>
+                    <label className="mr-2">Выберите количество игроков (2-4):</label>
+                    <select
+                        value={maxPlayers}
+                        onChange={(e) => setMaxPlayers(Number(e.target.value))}
+                        className="border rounded p-1 mr-2"
                     >
-                        Войти
+                        {[2, 3, 4].map((num) => (
+                            <option key={num} value={num}>
+                                {num}
+                            </option>
+                        ))}
+                    </select>
+                    <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+                        Создать игру
                     </button>
                 </form>
+            </div>
+            <div>
+                <h3 className="text-xl font-semibold mb-2">Доступные игры</h3>
+                <ul>
+                    {games.map((game) => (
+                        <li key={game.id} className="mb-2 border p-2 rounded flex justify-between items-center">
+                            <div>
+                                <p>Игра #{game.id}</p>
+                                <p>Максимум игроков: {game.diceNumber}</p>
+                                <p>Статус: {game.stage}</p>
+                            </div>
+                            {game.stage === 'WAITING' && (
+                                <button
+                                    onClick={() => handleJoinGame(game.id)}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                                >
+                                    Присоединиться
+                                </button>
+                            )}
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );
 };
 
-export default LoginForm;
+export default LobbyPage;
