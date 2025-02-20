@@ -16,6 +16,15 @@ export const api = axios.create({
     },
 });
 
+// Интерцептор для добавления токена
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
 export const authApi = {
     login: async (login: string, password: string): Promise<User> => {
         try {
