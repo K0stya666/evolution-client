@@ -15,7 +15,7 @@ const RegisterForm: React.FC = () => {
         e.preventDefault();
         try {
             await authApi.register(login, password);
-            navigate('/login');
+            navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Registration failed');
         }
@@ -53,6 +53,7 @@ const RegisterForm: React.FC = () => {
                     >
                         Зарегистрироваться
                     </button>
+                    <button onClick={() => navigate('/')}>Войти</button>
                 </form>
             </div>
         </div>
