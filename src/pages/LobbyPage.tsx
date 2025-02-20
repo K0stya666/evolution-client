@@ -18,7 +18,6 @@ const LobbyPage: React.FC = () => {
             setError(err.message || 'Ошибка загрузки игр');
         }
     };
-
     useEffect(() => {
         fetchGames();
         const interval = setInterval(fetchGames, 5000);
@@ -93,7 +92,8 @@ const LobbyPage: React.FC = () => {
                             onClick={() => handleRowClick(game)}
                         >
                             <td className="px-6 py-4 whitespace-nowrap">{game.id}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{game.diceNumber}</td>
+                            {/*<td className="px-6 py-4 whitespace-nowrap">{game.diceNumber}</td>*/}
+                            {/*<td className="px-6 py-4 whitespace-nowrap">{game.stage}</td>*/}
                             <td className="px-6 py-4 whitespace-nowrap">{game.stage}</td>
                             <td className="px-6 py-4 whitespace-nowrap">
                                 {game.stage === 'WAITING' && (
