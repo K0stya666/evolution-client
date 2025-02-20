@@ -1,12 +1,9 @@
+import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import LoginPage from "./pages/LoginPage";
-// import RegisterPage from "./pages/RegisterPage";
 import LoginForm from "./components/authorization/LogingForm.tsx";
 import RegisterForm from "./components/authorization/RegisterForm.tsx";
 import LobbyPage from "./pages/LobbyPage.tsx";
 import GamePage from "./pages/GamePage.tsx";
-// import LobbyPage from "./pages/LobbyPage";
-// import GamePage from "./pages/GamePage";
 
 function App() {
     return (
