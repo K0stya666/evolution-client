@@ -1,5 +1,30 @@
-.menu-wrapper {
-    position: relative;
+/*.menu-wrapper {*/
+/*    position: relative;*/
+/*}*/
+
+.menu-container {
+    width: 100vw; /* На всю ширину экрана */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #4d8c37; /* Зеленый цвет, как на скриншотах */
+    color: white;
+    overflow: hidden;           /* важно, чтобы скрывать содержимое при анимации */
+    transition: height 0.3s ease; /* плавный переход по высоте */
+    border-radius: 0 0 20px 20px; /* пример округления, если нужно «закруглить» низ */
+}
+
+/* Состояние свернуто (collapsed) */
+.menu-container.collapsed {
+    height: 50px; /* высота в свернутом состоянии (зависит от высоты шапки) */
+}
+
+/* Состояние развернуто (expanded) */
+.menu-container.expanded {
+    height: 200px; /* высота в развернутом состоянии (подберите под контент) */
+    /*height: auto;*/
+    /*max-height: 300px; !* Ограничение высоты, чтобы анимация работала *!*/
+    /*padding: 10px; !**/
 }
 
 /* Иконка-гамбургер: три горизонтальные полосы */
@@ -25,33 +50,51 @@
     border-radius: 2px;
 }
 
-/* Боковое меню */
-.slide-menu {
-    position: fixed;       /* чтобы меню «наезжало» поверх всего */
+/* Заголовок (шапка) меню */
+.menu-header {
+    cursor: pointer;
+    padding: 10px;
+
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;         /* ширина выдвижного меню */
-    height: 80px;        /* или 100%, если нужно на всю высоту экрана */
-    background-color: #4d8c37; /* зеленый цвет из примера */
-    transform: translateY(-100%); /* изначально скрыто за левым краем */
-    transition: transform 0.3s ease;
-    overflow: hidden;
-    z-index: 999;         /* чтобы меню было поверх основного контента */
+    width: 100vw;
+    height: 61px;
+    background-color: #4d8c37;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
-.slide-menu ul {
+/* Внутренний блок, который показывается при expanded */
+.menu-content {
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    display: flex;
+    padding: 1rem;
+
+    height: 0;
+    /*overflow: hidden;*/
+    transition: height 0.3s ease-in-out;
+}
+
+.menu-content ul {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
     list-style: none;
     margin: 0;
-    padding: 1rem;
+    padding: 0;
+    /*gap: 20px; !* Отступ между элементами *!*/
+    /*overflow-x: auto; !* Добавляем горизонтальную прокрутку, если не помещается *!*/
+    /*white-space: nowrap; !* Запрещает перенос элементов *!*/
 }
 
-.slide-menu li {
+.menu-content li {
+    /*padding: 10px;*/
+    text-align: center;
     margin: 0.5rem 0;
-    color: #fff;
     cursor: pointer;
-}
-
-/* Когда меню открыто, «сдвигаем» его на место */
-.slide-menu.open {
-    transform: translateX(0);
 }

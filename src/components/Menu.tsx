@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import './styles/Menu.css'; // здесь будут стили
+import './styles/Menu.css';
 
 const Menu: React.FC = () => {
-    // состояние, отвечающее за то, развернуто меню или свернуто
     const [expanded, setExpanded] = useState<boolean>(false);
 
-    // обработчик клика для переключения меню
     const toggleMenu = () => {
         setExpanded((prev) => !prev);
     };
 
     return (
         <div className={`menu-container ${expanded ? 'expanded' : 'collapsed'}`}>
+
+            {/* Иконка-гамбургер */}
+            <div className="hamburger-icon" onClick={toggleMenu}>
+                <div />
+                <div />
+                <div />
+            </div>
+
             {/* Шапка меню: то, что видно в свернутом состоянии */}
-            <div className="menu-header" onClick={toggleMenu}>
+            <div className="menu-header">
                 <span>Круг: 1</span>
                 <span>Фаза развитие</span>
                 <span>00:05:30</span>
