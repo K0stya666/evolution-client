@@ -1,0 +1,42 @@
+.menu-container {
+    background-color: #4d8c37; /* Зеленый цвет, как на скриншотах */
+    color: white;
+    overflow: hidden;           /* важно, чтобы скрывать содержимое при анимации */
+    transition: height 0.3s ease; /* плавный переход по высоте */
+    border-radius: 0 0 20px 20px; /* пример округления, если нужно «закруглить» низ */
+}
+
+/* Состояние свернуто (collapsed) */
+.menu-container.collapsed {
+    height: 50px; /* высота в свернутом состоянии (зависит от высоты шапки) */
+}
+
+/* Состояние развернуто (expanded) */
+.menu-container.expanded {
+    height: 200px; /* высота в развернутом состоянии (подберите под контент) */
+}
+
+/* Заголовок (шапка) меню */
+.menu-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+/* Внутренний блок, который показывается при expanded */
+.menu-content {
+    padding: 1rem;
+}
+
+.menu-content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-content li {
+    margin: 0.5rem 0;
+    cursor: pointer;
+}
