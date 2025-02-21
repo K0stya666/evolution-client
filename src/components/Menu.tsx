@@ -23,7 +23,7 @@ const Menu: React.FC = () => {
                 <span>Круг: 1</span>
                 <span>Фаза развитие</span>
                 <span>00:05:30</span>
-                <span>Профиль</span>
+                <span>{ localStorage.getItem('login') || 'Профиль' }</span>
             </div>
 
             {/* Развёрнутая часть меню: видна только если expanded = true */}

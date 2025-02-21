@@ -1,31 +1,29 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginForm from "./components/authorization/LogingForm.tsx";
-import RegisterForm from "./components/authorization/RegisterForm.tsx";
+import LoginForm from "./pages/authorization/LogingPage.tsx";
+import RegisterPage from "./pages/authorization/./RegisterPage.tsx";
 import LobbyPage from "./pages/LobbyPage.tsx";
 import GamePage from "./pages/GamePage.tsx";
 import Menu from "./components/Menu.tsx";
+import Deck from "./components/Deck.tsx";
 
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/*/!*<Route path="/login" element={<LoginPage />} />*!/*/}
-
-                {/*<Route path="/" element={<RegisterPage />} />*/}
-                {/*/!*<Route path="/lobby" element={<LobbyPage />} />*!/*/}
-                {/*/!*<Route path="/game/:gameId" element={<GamePage />} />*!/*/}
-
-
-                {/*<Route path="/login" element={<LoginForm />} />*/}
-                <Route path="/register" element={<RegisterForm />} />
-                <Route path="/lobby" element={<LobbyPage />} />
-                <Route path="/game/:gameId" element={<GamePage menu={<Menu/>} />} />
-
                 <Route path="/" element={<LoginForm />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/lobby" element={<LobbyPage />} />
+                <Route path="/game/:gameId" element={
+                    <GamePage
+                        menu={<Menu/>}
+                        deck={<Deck/>}
+                    />}
+                />
 
-                {/*<Route path="/menu" element={<Menu />} />*/}
+
+                <Route path="/deck" element={<Deck />} />
             </Routes>
         </BrowserRouter>
     );

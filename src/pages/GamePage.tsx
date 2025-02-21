@@ -9,11 +9,20 @@ import React from 'react';
  *    пробросьте их в этот компонент через props или через глобальное состояние (Redux, Zustand и т.д.).
  */
 
-const GamePage: React.FC<{ menu: React.ReactNode }> = ({ menu }) => {
+const GamePage: React.FC<{
+    menu: React.ReactNode
+    deck: React.ReactNode
+}> = ({ menu, deck }) => {
+
+
+
+
+
+
     return (
         <div>
             { menu }
-
+            { deck }
             {/* Верхняя панель */}
             <header className="header">
                 <div className="header-left">

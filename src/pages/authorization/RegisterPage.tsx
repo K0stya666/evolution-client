@@ -1,10 +1,10 @@
-// RegisterForm.tsx
+// RegisterPage.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {authApi} from "../../services/api.ts";
 
-const RegisterForm: React.FC = () => {
+const RegisterPage: React.FC = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -60,4 +60,4 @@ const RegisterForm: React.FC = () => {
     );
 };
 
-export default RegisterForm;
+export default RegisterPage;

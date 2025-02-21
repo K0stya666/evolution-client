@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi } from '../../services/api';
+import { authApi } from '../../services/api.ts';
 
 const LoginForm: React.FC = () => {
     const [login, setLogin] = useState('');
@@ -12,6 +12,7 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         try {
             await authApi.login(login, password);
+            localStorage.setItem('login', login);
             navigate('/lobby');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Login failed');
