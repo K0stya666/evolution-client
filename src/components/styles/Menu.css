@@ -1,42 +1,57 @@
-.menu-container {
-    background-color: #4d8c37; /* Зеленый цвет, как на скриншотах */
-    color: white;
-    overflow: hidden;           /* важно, чтобы скрывать содержимое при анимации */
-    transition: height 0.3s ease; /* плавный переход по высоте */
-    border-radius: 0 0 20px 20px; /* пример округления, если нужно «закруглить» низ */
+.menu-wrapper {
+    position: relative;
 }
 
-/* Состояние свернуто (collapsed) */
-.menu-container.collapsed {
-    height: 50px; /* высота в свернутом состоянии (зависит от высоты шапки) */
-}
-
-/* Состояние развернуто (expanded) */
-.menu-container.expanded {
-    height: 200px; /* высота в развернутом состоянии (подберите под контент) */
-}
-
-/* Заголовок (шапка) меню */
-.menu-header {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+/* Иконка-гамбургер: три горизонтальные полосы */
+.hamburger-icon {
+    width: 40px;
+    height: 30px;
     cursor: pointer;
-    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    /* Размещаем в левом верхнем углу */
+    position: fixed;
+    top: 25px;   /* Отступ сверху */
+    left: 50px;  /* Отступ слева */
+    z-index: 1000; /* Поверх других элементов */
 }
 
-/* Внутренний блок, который показывается при expanded */
-.menu-content {
+.hamburger-icon div {
+    width: 100%;
+    height: 4px;
+    background-color: white; /* или другой цвет */
+    border-radius: 2px;
+}
+
+/* Боковое меню */
+.slide-menu {
+    position: fixed;       /* чтобы меню «наезжало» поверх всего */
+    top: 0;
+    left: 0;
+    width: 100vw;         /* ширина выдвижного меню */
+    height: 80px;        /* или 100%, если нужно на всю высоту экрана */
+    background-color: #4d8c37; /* зеленый цвет из примера */
+    transform: translateY(-100%); /* изначально скрыто за левым краем */
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    z-index: 999;         /* чтобы меню было поверх основного контента */
+}
+
+.slide-menu ul {
+    list-style: none;
+    margin: 0;
     padding: 1rem;
 }
 
-.menu-content ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.slide-menu li {
+    margin: 0.5rem 0;
+    color: #fff;
+    cursor: pointer;
 }
 
-.menu-content li {
-    margin: 0.5rem 0;
-    cursor: pointer;
+/* Когда меню открыто, «сдвигаем» его на место */
+.slide-menu.open {
+    transform: translateX(0);
 }
