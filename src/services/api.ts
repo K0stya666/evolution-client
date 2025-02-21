@@ -16,14 +16,28 @@ export const api = axios.create({
     },
 });
 
-// Интерцептор для добавления токена
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+// Интерцептор для проверки истечения токена
+api.interceptors.response.use(
+    response => response,
+    async (error) => {
+        if (error.response?.status === 401) { // Если токен истёк
+            try {
+                const refreshToken = localStorage.getItem('refreshToken');
+                const response = await api.post('/auth/refresh', { refreshToken });
+
+                localStorage.setItem('token', response.data.token);
+                error.config.headers['Authorization'] = `Bearer ${response.data.token}`;
+
+                return api(error.config);
+            } catch (refreshError) {
+                console.error('Ошибка обновления токена:', refreshError);
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
     }
-    return config;
-});
+);
 
 export const authApi = {
     login: async (login: string, password: string): Promise<User> => {

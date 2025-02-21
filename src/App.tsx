@@ -4,6 +4,8 @@ import LoginForm from "./components/authorization/LogingForm.tsx";
 import RegisterForm from "./components/authorization/RegisterForm.tsx";
 import LobbyPage from "./pages/LobbyPage.tsx";
 import GamePage from "./pages/GamePage.tsx";
+import Menu from "./components/Menu.tsx";
+
 
 function App() {
     return (
@@ -19,8 +21,11 @@ function App() {
                 {/*<Route path="/login" element={<LoginForm />} />*/}
                 <Route path="/register" element={<RegisterForm />} />
                 <Route path="/lobby" element={<LobbyPage />} />
-                <Route path="/game/:gameId" element={<GamePage />} />
+                <Route path="/game/:gameId" element={<GamePage menu={<Menu/>} />} />
+
                 <Route path="/" element={<LoginForm />} />
+
+                {/*<Route path="/menu" element={<Menu />} />*/}
             </Routes>
         </BrowserRouter>
     );

@@ -9,9 +9,11 @@ import React from 'react';
  *    пробросьте их в этот компонент через props или через глобальное состояние (Redux, Zustand и т.д.).
  */
 
-const GamePage: React.FC = () => {
+const GamePage: React.FC<{ menu: React.ReactNode }> = ({ menu }) => {
     return (
-        <div className="flex flex-col h-screen bg-white">
+        <div>
+            { menu }
+
             {/* Верхняя панель */}
             <header className="header">
                 <div className="header-left">
@@ -24,17 +26,17 @@ const GamePage: React.FC = () => {
 
 
             {/* Основная область (игровое поле) */}
-            <main className="relative flex-grow overflow-hidden bg-[#f6fff6]">
+            <main>
                 {/* Пример расположения красных фишек (еда) и кубика в верхней части */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center space-x-4">
-                    <div className="flex space-x-2">
+                <div>
+                    <div>
                         {/* Замените src на ваши иконки жетонов еды */}
-                        <img src="/assets/red-token.png" alt="food token" className="w-8 h-8" />
-                        <img src="/assets/red-token.png" alt="food token" className="w-8 h-8" />
-                        <img src="/assets/red-token.png" alt="food token" className="w-8 h-8" />
+                        <img src="/assets/red-token.png" alt="food token"/>
+                        <img src="/assets/red-token.png" alt="food token"/>
+                        <img src="/assets/red-token.png" alt="food token"/>
                     </div>
                     {/* Кубик */}
-                    <img src="/assets/dice.png" alt="dice" className="w-8 h-8" />
+                    <img src="/assets/dice.png" alt="dice"/>
                 </div>
 
                 {/* Подпись по центру: "Игроки по очереди выкладывают 1 карту с руки" */}
