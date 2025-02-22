@@ -1,10 +1,13 @@
-.card {
-    /* Если убрать, то съедет рамка карты */
-    position: absolute;
-
+.card-template {
+    /*position: absolute;*/
     width: 140px;
     height: 190px;
-    background-color: #f0f0f0;
+    background-color: #f6f6f6; /* Цвет фона */
+
+    /* Центрирование */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     /* Закругление углов карт */
     border-radius: 10px;
@@ -12,29 +15,14 @@
     /* Тень */
     box-shadow: 0 1px 3px rgba(0,0,0,0.12);
 
-    /* Делает заднюю сторону карточки невидимой при её повороте */
-    backface-visibility: hidden;
-    /* Устанавливает центр карточки в качестве точки трансформации */
-    transform-origin: center center;
-
     /* Граница карты */
-    border: 1px solid #e0e0e0;
+    border: 7px solid #416317;
 }
 
-.card::before {
-    /* Пустой элемент, обязательный для before */
-    content: '';
-
-    /* Для того, чтобы рамка располагалась по контуру карты */
-    position: absolute;
-
-    /* Отступы до рамки карты */
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-
-    border: 3px solid #1a5830;
-    border-radius: 5px;
-    /*opacity: 0.3;*/
+.lizard {
+    /* Настройки расположения ящерицы */
+    max-width: 70%;
+    height: auto;
+    max-height: 70%;
+    display: block;
 }

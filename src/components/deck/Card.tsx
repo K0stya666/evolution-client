@@ -1,13 +1,17 @@
-// src/components/Card/Card.tsx
-
 import React from "react";
 import "./Card.css";
+
+export interface Card {
+    title: string;
+    description: string;
+    extraFoodNeeded?: number;
+}
 
 const Card: React.FC = () => {
 
 
     return (
-        <div className="card">
+        <div className="card-template">
             <p>hui</p>
         </div>
     );
