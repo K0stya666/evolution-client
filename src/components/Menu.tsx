@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles/Menu.css';
+import '../../public/styles/Menu.css';
 
 const Menu: React.FC = () => {
     const [expanded, setExpanded] = useState<boolean>(false);

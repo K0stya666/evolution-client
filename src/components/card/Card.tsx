@@ -4,7 +4,7 @@ import {CardCondition, CardPerks, CardPerksImages} from "../../types/game.ts";
 
 interface CardStats {
     condition: CardCondition;
-    perk: CardPerks;
+    perk?: CardPerks;
 }
 
 const Card: React.FC<CardStats> = ({ condition, perk }) => {
@@ -21,10 +21,12 @@ const Card: React.FC<CardStats> = ({ condition, perk }) => {
                     {/*<CardFront/>*/}
                     <div className="card-template">
                         {/*<p>hui</p>*/}
-                        {condition && <div className="condition-overlay">{condition}</div>}
-                        <div className="perk-overlay">
-                            <img src={CardPerksImages[perk]} alt={perk} className="perk-icon"/>
-                        </div>
+                        <div className="condition-overlay">{condition}</div>
+                        {perk && (
+                            <div className="perk-overlay">
+                                <img src={CardPerksImages[perk]} alt={perk} className="perk-icon"/>
+                            </div>
+                        )}
                     </div>
 
                 </div>

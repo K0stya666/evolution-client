@@ -1,0 +1,49 @@
+.dice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    user-select: none;
+}
+
+.dice {
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border: 2px solid #000;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.rolling {
+    transform: rotate(360deg);
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pip {
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+}
+
+.dice-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* выравнивание по верхнему краю */
+    align-items: center;
+    height: 100vh;
+    padding-top: 50px; /* отступ сверху */
+    user-select: none;
+    margin: 0;
+}

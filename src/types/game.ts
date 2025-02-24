@@ -20,13 +20,49 @@ export enum CardCondition {
 
 export enum CardPerks {
     CARNIVOROUS = "ХИЩНИК",
-    FAT_TISSUE = "ЖИРОВОЙ ЗАПАС"
+    FAT_TISSUE = "ЖИРОВОЙ ЗАПАС",
 }
 
 export const CardPerksImages: Record<CardPerks, string> = {
     [CardPerks.CARNIVOROUS]: "/images/carnivorous.png",
     [CardPerks.FAT_TISSUE]: "/images/fat.png"
 }
+
+export const deck = [
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS },
+    { condition: CardCondition.SWIMMING},
+    { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
+    { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS }
+] as const;
+
+
+
+
+
 
 export type Phase =
     | "growth"             // фаза развития

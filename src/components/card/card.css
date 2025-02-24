@@ -77,6 +77,13 @@
     text-align: center;
     z-index: 2; /* Поверх всего */
     white-space: nowrap; /* Чтобы текст не переносился */
+    -webkit-user-select: none;
+    /* user-select -- это нестандартное свойство */
+
+    -moz-user-select: none;
+    /* поэтому нужны префиксы */
+
+    -ms-user-select: none;
 }
 
 .perk-overlay {
@@ -88,9 +95,16 @@
     border-radius: 5px;
     text-align: center;
     z-index: 2;
+    -webkit-user-select: none;
+    /* user-select -- это нестандартное свойство */
+
+    -moz-user-select: none;
+    /* поэтому нужны префиксы */
+
+    -ms-user-select: none;
 }
 
 .perk-icon {
     width: 140px;
-    height: auto;
+    height: 40px;
 }
