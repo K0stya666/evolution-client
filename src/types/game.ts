@@ -1,3 +1,33 @@
+export enum CardCondition {
+    SWIMMING = "ВОДОПЛАВАЮЩЕЕ",
+    RUNNING = "БЫСТРОЕ",
+    MIMICRY = "МИМИКРИЯ",
+    SCAVENGER = "ПАДАЛЬЩИК",
+    SYMBIOSES = "СИМБИОЗ",
+    PIRACY = "ПИРАТСТВО",
+    TAIL_LOSE = "ОТБРАСЫВАНИЕ ХВОСТА",
+    COMMUNISM = "ВЗАИМОДЕЙСТВИЕ",
+    GRAZING = "ТОПОТУН",
+    HIGH_BODY_WEIGHT = "БОЛЬШОЙ",
+    HIBERNATION_ABILITY = "СПЯЧКА",
+    POISONOUS = "ЯДОВИТОЕ",
+    COOPERATION = "СОТРУДНЕЧЕСТВО",
+    BURROWING = "НОРНОЕ",
+    CAMOUFLAGE = "КАМУФЛЯЖ",
+    SHARP_VISION = "ОСТРОЕ ЗРЕНИЕ",
+    PARASITE = "ПАРАЗИТ"
+}
+
+export enum CardPerks {
+    CARNIVOROUS = "ХИЩНИК",
+    FAT_TISSUE = "ЖИРОВОЙ ЗАПАС"
+}
+
+export const CardPerksImages: Record<CardPerks, string> = {
+    [CardPerks.CARNIVOROUS]: "/images/carnivorous.png",
+    [CardPerks.FAT_TISSUE]: "/images/fat.png"
+}
+
 export type Phase =
     | "growth"             // фаза развития
     | "foodCalculation"    // фаза определения кормовой базы
@@ -8,7 +38,6 @@ export interface Card {
     id: string;
     title: string;
     description: string;
-    // Признак, что карта может давать дополнительную потребность в еде, например
     extraFoodNeeded?: number;
 }
 
