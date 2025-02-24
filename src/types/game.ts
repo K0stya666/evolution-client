@@ -57,7 +57,7 @@ export const deck = [
     { condition: CardCondition.SWIMMING},
     { condition: CardCondition.COMMUNISM, perk: CardPerks.FAT_TISSUE },
     { condition: CardCondition.SCAVENGER, perk: CardPerks.CARNIVOROUS }
-] as const;
+];
 
 
 

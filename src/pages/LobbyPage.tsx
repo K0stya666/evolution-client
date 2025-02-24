@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Game } from '../types/game';
-import { authApi } from '../services/api';
+import {authApi, gameApi} from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const LobbyPage: React.FC = () => {
@@ -38,7 +38,7 @@ const LobbyPage: React.FC = () => {
     // Присоединение к игре
     const handleJoinGame = async (gameId: number) => {
         try {
-            await authApi.joinGame(gameId);
+            await gameApi.joinGame(gameId);
             navigate(`/game/${gameId}`);
         } catch (err: any) {
             setError(err.message || 'Ошибка присоединения к игре');

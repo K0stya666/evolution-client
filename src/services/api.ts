@@ -1,12 +1,13 @@
-// api.ts
-
 import axios from 'axios';
 import { User } from '../types/user';
-import { Game } from '../types/game';
-// import SockJS from "sockjs-client";
-// import {Stomp} from "@stomp/stompjs"
 
 const API_URL = 'http://localhost:8080/app';
+
+export interface Game {
+    id: number;
+    stage: string;
+    diceNumber: number;
+}
 
 export const api = axios.create({
     baseURL: API_URL,
@@ -86,8 +87,10 @@ export const authApi = {
         } catch (error: any) {
             throw new Error(error.response?.data?.error || 'Failed to create game');
         }
-    },
+    }
+};
 
+export const gameApi = {
     joinGame: async (gameId: number): Promise<Game> => {
         try {
             const token = localStorage.getItem('token');
@@ -100,5 +103,14 @@ export const authApi = {
         } catch (error: any) {
             throw new Error(error.response?.data?.error || 'Failed to join game');
         }
+    },
+
+    getPlayers: async (gameId: number): Promise<Game> => {
+        try {
+            const response = await api.get(`/games/${gameId}/getPlayers`);
+            return response.data;
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || 'Failed to get players');
+        }
     }
-};
+}
