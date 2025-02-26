@@ -14,8 +14,12 @@ const LoginForm: React.FC = () => {
             await authApi.login(login, password);
             localStorage.setItem('login', login);
             navigate('/lobby');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Login failed');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Login failed');
+            }
         }
     };
 

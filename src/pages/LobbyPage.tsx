@@ -14,8 +14,12 @@ const LobbyPage: React.FC = () => {
         try {
             const gamesList = await authApi.fetchGames();
             setGames(gamesList);
-        } catch (err: any) {
-            setError(err.message || 'Ошибка загрузки игр');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Ошибка загрузки игр');
+            }
         }
     };
     useEffect(() => {
@@ -30,8 +34,12 @@ const LobbyPage: React.FC = () => {
         try {
             await authApi.createGame(maxPlayers);
             fetchGames();
-        } catch (err: any) {
-            setError(err.message || 'Ошибка создания игры');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Ошибка создания игры');
+            }
         }
     };
 
@@ -40,8 +48,12 @@ const LobbyPage: React.FC = () => {
         try {
             await gameApi.joinGame(gameId);
             navigate(`/game/${gameId}`);
-        } catch (err: any) {
-            setError(err.message || 'Ошибка присоединения к игре');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Ошибка присоединения к игре');
+            }
         }
     };
 
