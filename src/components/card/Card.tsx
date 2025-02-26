@@ -1,13 +1,14 @@
 import React, {useState} from "react";
 import "./card.css";
-import {CardCondition, CardPerks, CardPerksImages} from "../../types/game.ts";
+import {Perk, Type, CardTypesImages} from "../../types/conditions.ts";
 
 interface CardStats {
-    condition: CardCondition;
-    perk?: CardPerks;
+    condition: Perk;
+    perk?: Type;
 }
 
-const Card: React.FC<CardStats> = ({ condition, perk }) => {
+
+const Card: React.FC<CardStats> = ({condition, perk}) => {
     const [flipped, setFlipped] = useState(false);
 
     const handleClick = () => {
@@ -24,7 +25,7 @@ const Card: React.FC<CardStats> = ({ condition, perk }) => {
                         <div className="condition-overlay">{condition}</div>
                         {perk && (
                             <div className="perk-overlay">
-                                <img src={CardPerksImages[perk]} alt={perk} className="perk-icon"/>
+                                <img src={CardTypesImages[perk]} alt={perk} className="perk-icon"/>
                             </div>
                         )}
                     </div>

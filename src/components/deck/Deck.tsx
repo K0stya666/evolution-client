@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import '../../../public/styles/Deck.css';
-import {CardCondition, CardPerks} from "../../types/game.ts";
 import Card from "../card/Card.tsx";
+import {Perk, Type} from "../../types/conditions.ts";
 
 export interface CardData {
-    condition: CardCondition;
-    perk?: CardPerks;
+    condition: Perk;
+    perk?: Type;
 }
 
 export interface Cards {

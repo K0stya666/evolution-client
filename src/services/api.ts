@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { User } from '../types/user';
+import {Card, Player, User} from "../types/entities.ts";
+import {Deck} from "../types/models.ts";
+
 
 const API_URL = 'http://localhost:8080/app';
 
@@ -105,12 +107,30 @@ export const gameApi = {
         }
     },
 
-    getPlayers: async (gameId: number): Promise<Game> => {
+    getPlayers: async (gameId: number): Promise<Player[]> => {
         try {
             const response = await api.get(`/games/${gameId}/getPlayers`);
             return response.data;
         } catch (error: any) {
             throw new Error(error.response?.data?.error || 'Failed to get players');
+        }
+    },
+
+    getDeck: async (): Promise<Deck> => {
+        try {
+            const response = await api.get('/games/getDeck');
+            return response.data;
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || 'Failed to get deck');
+        }
+    },
+
+    getCards: async (gameId: number): Promise<Card> => {
+        try {
+            const response = await api.get(`/games/${gameId}/getCards`);
+            return response.data;
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || 'Failed to get cards');
         }
     }
 }

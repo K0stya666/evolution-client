@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Game } from '../types/game';
 import {authApi, gameApi} from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import {Game} from "../types/entities.ts";
 
 const LobbyPage: React.FC = () => {
     const [games, setGames] = useState<Game[]>([]);
@@ -47,20 +47,21 @@ const LobbyPage: React.FC = () => {
 
     // Переход в игру при клике по строке таблицы
     const handleRowClick = (game: Game) => {
+        localStorage.setItem("gameId", game.id.toString());
+        handleJoinGame(game.id);
         navigate(`/game/${game.id}`);
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <h2 className="text-2xl font-bold mb-4">Лобби</h2>
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="mb-6">
-                <form onSubmit={handleCreateGame} className="flex items-center">
-                    <label className="mr-2">Выберите количество игроков (2-4):</label>
+        <div>
+            <h2>Лобби</h2>
+            {error && <p>{error}</p>}
+            <div>
+                <form onSubmit={handleCreateGame}>
+                    <label>Выберите количество игроков (2-4):</label>
                     <select
                         value={maxPlayers}
                         onChange={(e) => setMaxPlayers(Number(e.target.value))}
-                        className="border rounded p-1 mr-2"
                     >
                         {[2, 3, 4].map((num) => (
                             <option key={num} value={num}>
@@ -68,45 +69,41 @@ const LobbyPage: React.FC = () => {
                             </option>
                         ))}
                     </select>
-                    <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+                    <button type="submit">
                         Создать игру
                     </button>
                 </form>
             </div>
             <div>
-                <h3 className="text-xl font-semibold mb-2">Доступные игры</h3>
-                <table className="min-w-full divide-y divide-gray-200 border">
-                    <thead className="bg-gray-50">
+                <h3>Доступные игры</h3>
+                <table>
+                    <thead>
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Игры</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Максимум игроков</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
-                        <th className="px-6 py-3"></th>
+                        <th>ID Игры</th>
+                        <th>Максимум игроков</th>
+                        <th>Статус</th>
+                        <th></th>
                     </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                     {games.map((game) => (
                         <tr
                             key={game.id}
-                            className="hover:bg-gray-100 cursor-pointer"
                             onClick={() => handleRowClick(game)}
                         >
-                            <td className="px-6 py-4 whitespace-nowrap">{game.id}</td>
-                            {/*<td className="px-6 py-4 whitespace-nowrap">{game.diceNumber}</td>*/}
-                            {/*<td className="px-6 py-4 whitespace-nowrap">{game.stage}</td>*/}
-                            <td className="px-6 py-4 whitespace-nowrap">{game.stage}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                {game.stage === 'WAITING' && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // чтобы не сработал клик по строке
-                                            handleJoinGame(game.id);
-                                        }}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded"
-                                    >
-                                        Присоединиться
-                                    </button>
-                                )}
+                            <td>{game.id}</td>
+                            <td >{game.stage}</td>
+                            <td>
+                                {/*{game.stage === 'WAITING' && (*/}
+                                {/*    <button*/}
+                                {/*        onClick={(e) => {*/}
+                                {/*            e.stopPropagation(); // чтобы не сработал клик по строке*/}
+                                {/*            handleJoinGame(game.id);*/}
+                                {/*        }}*/}
+                                {/*    >*/}
+                                {/*        Присоединиться*/}
+                                {/*    </button>*/}
+                                {/*)}*/}
                             </td>
                         </tr>
                     ))}
