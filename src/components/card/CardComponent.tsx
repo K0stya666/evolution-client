@@ -8,7 +8,7 @@ interface CardStats {
 }
 
 
-const Card: React.FC<CardStats> = ({condition, perk}) => {
+const CardComponent: React.FC<CardStats> = ({condition, perk}) => {
     const [flipped, setFlipped] = useState(false);
 
     const handleClick = () => {
@@ -42,4 +42,4 @@ const Card: React.FC<CardStats> = ({condition, perk}) => {
     )
 }
 
-export default Card;
+export default CardComponent;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../../../public/styles/Deck.css';
-import Card from "../card/Card.tsx";
+import CardComponent from "../card/CardComponent.tsx";
 import {Perk, Type} from "../../types/conditions.ts";
 
 export interface CardData {
@@ -48,7 +48,7 @@ export const Deck: React.FC<Cards> = ({ cards, onDeal }) => {
                             zIndex: deck.length - index,
                         }}
                     >
-                        <Card condition={card.condition} perk={card.perk} />
+                        <CardComponent condition={card.condition} perk={card.perk} />
                     </div>
                 ))}
 

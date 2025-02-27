@@ -58,8 +58,9 @@ export const authApi = {
             const response = await api.post('/auth/register', { login, password });
             localStorage.setItem('token', response.data.token);
             return response.data;
-        } catch (error: any) {
-            throw new Error(error.response?.data?.error || 'Registration failed');
+        } catch (error) {
+            console.log(error);
+            throw new Error('Registration failed');
         }
     },
 
@@ -67,8 +68,12 @@ export const authApi = {
         try {
             const response = await api.get('/games/availableGames');
             return response.data;
-        } catch (error: any) {
-            throw new Error(error.response?.data?.error || 'Failed to fetch games');
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            } else {
+                throw new Error('Failed to fetch games');
+            }
         }
     },
 
@@ -120,14 +125,19 @@ export const gameApi = {
         try {
             const response = await api.get('/games/getDeck');
             return response.data;
-        } catch (error: any) {
-            throw new Error(error.response?.data?.error || 'Failed to get deck');
+        } catch (err) {
+            console.log(err);
+            if (err instanceof Error) {
+                throw new Error(err.message);
+            } else {
+                throw new Error('Failed to get deck');
+            }
         }
     },
 
-    getCards: async (gameId: number): Promise<Card> => {
+    getCard: async (gameId: number): Promise<Card> => {
         try {
-            const response = await api.get(`/games/${gameId}/getCards`);
+            const response = await api.get(`/games/${gameId}/getCard`);
             return response.data;
         } catch (error: any) {
             throw new Error(error.response?.data?.error || 'Failed to get cards');

@@ -5,7 +5,7 @@ import RegisterPage from "./pages/authorization/./RegisterPage.tsx";
 import LobbyPage from "./pages/LobbyPage.tsx";
 import GamePage from "./pages/GamePage.tsx";
 import Deck from "./components/deck/Deck.tsx";
-import Card from "./components/card/Card.tsx";
+import CardComponent from "./components/card/CardComponent.tsx";
 import Dice from "./components/dice/Dice.tsx";
 import {deck, Perk, Type} from "./types/conditions.ts";
 
@@ -33,7 +33,7 @@ function App() {
                 />
 
                 <Route path="/card" element={
-                    <Card
+                    <CardComponent
                         condition={Perk.SWIMMING}
                         perk={Type.FAT_TISSUE}
                     />

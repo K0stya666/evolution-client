@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import Menu from "../components/Menu.tsx";
 import Dice from "../components/dice/Dice.tsx";
-import { Player } from "../types/entities.ts";
+import {Card, Player} from "../types/entities.ts";
 import { gameApi } from "../services/api.ts";
+import CardComponent from "../components/card/CardComponent.tsx";
 
 const GamePage: React.FC = () => {
     const [players, setPlayers] = useState<Player[]>([]);
+    const [card, setCard] = useState<Card>();
     const gameId = Number(localStorage.getItem('gameId'));
 
     useEffect(() => {
         const fetchPlayers = async () => {
             try {
                 const data = await gameApi.getPlayers(gameId);
+                const cardData = await gameApi.getCard(gameId);
+                setCard(cardData);
                 setPlayers(data);
             } catch (error) {
                 console.error("Ошибка при получении игроков:", error);
@@ -34,6 +38,15 @@ const GamePage: React.FC = () => {
                     <div className="dice-container">
                         <Dice />
                     </div>
+                    {
+                        card &&
+                    <div>
+                        <CardComponent
+                            condition={card.characteristic}
+                            perk={card.type}
+                        />
+                    </div>
+                    }
 
                     <div className="players-container">
                         {players.map((player, index) => {
@@ -46,10 +59,6 @@ const GamePage: React.FC = () => {
 
                             return (
                                 <div>
-                                    <div>
-                                        {}
-                                        <p>hui</p>
-                                    </div>
 
                                     <div
                                         key={player.id}
