@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import '../../public/styles/Menu.css';
+import {Player} from "../types/entities.ts";
+import {gameApi} from "../services/api.ts";
 
 const Menu: React.FC = () => {
+    // const [player, setPlayer] = useState<Player>();
     const [expanded, setExpanded] = useState<boolean>(false);
+
+    // const fetchPlayer = async () => {
+    //     const data = await gameApi.getPlayers();
+    //     setPlayer(data)
+    // }
 
     const toggleMenu = () => {
         setExpanded((prev) => !prev);

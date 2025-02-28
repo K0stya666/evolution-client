@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi } from '../../services/api.ts';
+import GameWebSocket from "../../services/GameWebSocket.ts";
 
 const LoginForm: React.FC = () => {
     const [login, setLogin] = useState('');
@@ -11,11 +11,15 @@ const LoginForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await authApi.login(login, password);
             localStorage.setItem('login', login);
+            GameWebSocket.login(login, password);
             navigate('/lobby');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Login failed');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Login failed');
+            }
         }
     };
 
@@ -42,7 +46,7 @@ const LoginForm: React.FC = () => {
                             required
                         />
                     </div>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {error && <p>{error}</p>}
                     <button type="submit">Войти</button>
                     <button onClick={() => navigate('/register')}>Зарегистрироваться</button>
                 </form>

@@ -1,15 +1,8 @@
 import axios from 'axios';
-import {Card, Player, User} from "../types/entities.ts";
+import {Card, Game, Player, User} from "../types/entities.ts";
 import {Deck} from "../types/models.ts";
 
-
 const API_URL = 'http://localhost:8080/app';
-
-export interface Game {
-    id: number;
-    stage: string;
-    diceNumber: number;
-}
 
 export const api = axios.create({
     baseURL: API_URL,
