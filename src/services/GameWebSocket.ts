@@ -9,6 +9,7 @@ class GameWebSocket {
             reconnectDelay: 5000, // Автоматическое переподключение через 5 секунд
             onConnect: () => {
                 console.log("WebSocket подключен!");
+                this.subscribeToAuthResponses();
                 this.subscribeToGameUpdates();
             },
             onStompError: (error) => {
@@ -18,6 +19,58 @@ class GameWebSocket {
 
         this.client.activate();
     }
+
+    private subscribeToAuthResponses() {
+        this.client.subscribe("/user/queue/auth", (message: IMessage) => {
+            const authResponse = JSON.parse(message.body);
+            console.log("Auth response:", authResponse);
+
+            // If the response has a token, store it
+            if (authResponse.token) {
+                localStorage.setItem("token", authResponse.token);
+
+                // Optionally reconnect with token, if your server requires
+                // a token in the CONNECT headers for future requests
+                this.reconnectWithToken(authResponse.token);
+            }
+        });
+    }
+
+    private reconnectWithToken(token: string) {
+        console.log("Disconnecting current client to reconnect with token...");
+
+        // Deactivate current connection
+        this.client.deactivate().then(() => {
+            // Create a brand-new STOMP Client with the token in connectHeaders
+            const newClient = new Client({
+                brokerURL: "ws://localhost:8080/ws",
+                connectHeaders: {
+                    Authorization: `Bearer ${token}`,
+                },
+                reconnectDelay: 5000,
+                onConnect: () => {
+                    console.log("Reconnected with token!");
+                    // Re-subscribe to the topics you need, e.g.:
+                    newClient.subscribe("/topic/games", (msg) => { /* ... */ });
+                    newClient.subscribe("/user/queue/players", (msg) => { /* ... */ });
+                    newClient.subscribe("/user/queue/auth", (msg) => { /* ... */ });
+                },
+                onStompError: (error) => {
+                    console.error("STOMP Error:", error);
+                },
+            });
+
+            // Finally, activate the new client
+            newClient.activate();
+
+            // If you want to store the newClient in a class property, do so:
+            this.client = newClient;
+        });
+    }
+
+
+
+
 
     // Подписываемся на общий канал обновлений игр
     private subscribeToGameUpdates() {
