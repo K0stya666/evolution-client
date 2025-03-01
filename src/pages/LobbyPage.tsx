@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Game } from '../types/entities';
-import GameWebSocket from '../services/GameWebSocket';
+import useGameWebSocket from '../services/useGameWebSocket';
 
 const LobbyPage: React.FC = () => {
     const [games, setGames] = useState<Game[]>([]);
@@ -9,45 +9,47 @@ const LobbyPage: React.FC = () => {
     const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
-    // 1) On mount, subscribe to game-list updates from the WebSocket
+    // Получаем методы и состояние из кастомного хука
+    const { fetchGames, createGame, joinGame, addFetchGamesCallback, readyState } = useGameWebSocket();
+
+    // Подписываемся на обновления списка игр при монтировании компонента
     useEffect(() => {
-        GameWebSocket.onFetchGames((fetchedGames) => {
+        addFetchGamesCallback((fetchedGames: Game[]) => {
             setGames(fetchedGames);
         });
 
-        // 2) Immediately request the latest games
-        GameWebSocket.fetchGames();
+        // Запрашиваем актуальный список игр
+        fetchGames();
 
-        // (Optional) Poll every X seconds, if you want:
+        // Опционально: обновляем список каждые 5 секунд
         const intervalId = setInterval(() => {
-            GameWebSocket.fetchGames();
+            fetchGames();
         }, 5000);
-        return () => clearInterval(intervalId);
-    }, []);
 
-    // Create game
+        return () => clearInterval(intervalId);
+    }, [addFetchGamesCallback, fetchGames]);
+
+    // Создание игры
     const handleCreateGame = (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            GameWebSocket.createGame(maxPlayers);
-            // The server broadcasts on /topic/games → your subscription can update the list
+            createGame(maxPlayers);
         } catch (err: any) {
             setError(err.message || 'Ошибка создания игры');
         }
     };
 
-    // Join game
+    // Присоединение к игре
     const handleJoinGame = (gameId: number) => {
         try {
-            GameWebSocket.joinGame(gameId);
-            // Also triggers broadcast on /topic/games
+            joinGame(gameId);
             navigate(`/game/${gameId}`);
         } catch (err: any) {
             setError(err.message || 'Ошибка присоединения к игре');
         }
     };
 
-    // Row click: Join & navigate
+    // По клику по строке таблицы присоединяемся к игре
     const handleRowClick = (game: Game) => {
         localStorage.setItem("gameId", game.id.toString());
         handleJoinGame(game.id);
@@ -60,10 +62,7 @@ const LobbyPage: React.FC = () => {
 
             <form onSubmit={handleCreateGame}>
                 <label>Кол-во игроков (2-4):</label>
-                <select
-                    value={maxPlayers}
-                    onChange={(e) => setMaxPlayers(Number(e.target.value))}
-                >
+                <select value={maxPlayers} onChange={(e) => setMaxPlayers(Number(e.target.value))}>
                     {[2, 3, 4].map(num => (
                         <option key={num} value={num}>{num}</option>
                     ))}
@@ -88,6 +87,8 @@ const LobbyPage: React.FC = () => {
                 ))}
                 </tbody>
             </table>
+
+            <p>Статус соединения: {readyState}</p>
         </div>
     );
 };
