@@ -1,11 +1,17 @@
 import { Client, IMessage } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { Game } from "../types/entities.ts";
 
 class GameWebSocket {
     private client: Client;
 
+    private fetchGamesCallBacks: ((games: Game[]) => void)[] = [];
+
     constructor() {
+        const token = localStorage.getItem("token") || "";
         this.client = new Client({
-            brokerURL: "ws://localhost:8080/ws", // URL точки подключения WebSocket
+            // brokerURL: "ws://localhost:8080/ws", // URL точки подключения WebSocket
+            webSocketFactory: () => new SockJS(`http://localhost:8080/ws?token=${encodeURIComponent(token)}`),
             reconnectDelay: 5000, // Автоматическое переподключение через 5 секунд
             onConnect: () => {
                 console.log("WebSocket подключен!");
@@ -18,6 +24,10 @@ class GameWebSocket {
         });
 
         this.client.activate();
+    }
+
+    public onFetchGames(callback: (games: Game[]) => void) {
+        this.fetchGamesCallBacks.push(callback);
     }
 
     private subscribeToAuthResponses() {
@@ -36,34 +46,62 @@ class GameWebSocket {
         });
     }
 
+    // private reconnectWithToken(token: string) {
+    //     console.log("Disconnecting current client to reconnect with token...");
+    //
+    //     // Deactivate current connection
+    //     this.client.deactivate().then(() => {
+    //         // Create a brand-new STOMP Client with the token in connectHeaders
+    //         const newClient = new Client({
+    //             brokerURL: "ws://localhost:8080/ws",
+    //             connectHeaders: {
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             reconnectDelay: 5000,
+    //             onConnect: () => {
+    //                 console.log("Reconnected with token!");
+    //                 // Re-subscribe to the topics you need, e.g.:
+    //                 newClient.subscribe("/topic/games", () => { /* ... */ });
+    //                 newClient.subscribe("/user/queue/players", () => { /* ... */ });
+    //                 newClient.subscribe("/user/queue/auth", () => { /* ... */ });
+    //             },
+    //             onStompError: (error) => {
+    //                 console.error("STOMP Error:", error);
+    //             },
+    //         });
+    //
+    //         // Finally, activate the new client
+    //         newClient.activate();
+    //
+    //         // If you want to store the newClient in a class property, do so:
+    //         this.client = newClient;
+    //     });
+    // }
     private reconnectWithToken(token: string) {
         console.log("Disconnecting current client to reconnect with token...");
 
         // Deactivate current connection
         this.client.deactivate().then(() => {
-            // Create a brand-new STOMP Client with the token in connectHeaders
+            // Create a new STOMP Client with SockJS and token in query string
             const newClient = new Client({
-                brokerURL: "ws://localhost:8080/ws",
-                connectHeaders: {
-                    Authorization: `Bearer ${token}`,
-                },
+                webSocketFactory: () => new SockJS(`http://localhost:8080/ws?token=${token}`),
                 reconnectDelay: 5000,
                 onConnect: () => {
                     console.log("Reconnected with token!");
-                    // Re-subscribe to the topics you need, e.g.:
-                    newClient.subscribe("/topic/games", (msg) => { /* ... */ });
-                    newClient.subscribe("/user/queue/players", (msg) => { /* ... */ });
-                    newClient.subscribe("/user/queue/auth", (msg) => { /* ... */ });
+                    // Re-subscribe to necessary topics
+                    newClient.subscribe("/topic/games", () => { /* ... */ });
+                    newClient.subscribe("/user/queue/players", () => { /* ... */ });
+                    newClient.subscribe("/user/queue/auth", () => { /* ... */ });
                 },
                 onStompError: (error) => {
                     console.error("STOMP Error:", error);
                 },
             });
 
-            // Finally, activate the new client
+            // Activate the new client
             newClient.activate();
 
-            // If you want to store the newClient in a class property, do so:
+            // Store the new client instance
             this.client = newClient;
         });
     }
@@ -72,8 +110,16 @@ class GameWebSocket {
 
 
 
+
     // Подписываемся на общий канал обновлений игр
     private subscribeToGameUpdates() {
+        this.client.subscribe("/user/queue/fetchGamesResponse", (message: IMessage) => {
+            const gameList: Game[] = JSON.parse(message.body);
+            console.log("Received game list: ", gameList);
+
+            this.fetchGamesCallBacks.forEach(cb => cb(gameList));
+        });
+
         this.client.subscribe("/topic/games", (message: IMessage) => {
             console.log("Обновление игры:", message.body);
             // Здесь можно обновлять состояние приложения в зависимости от полученных данных
@@ -97,6 +143,12 @@ class GameWebSocket {
         this.client.publish({
             destination: "/app/auth/register",
             body: JSON.stringify({ login, password })
+        });
+    }
+
+    public fetchGames() {
+        this.client.publish({
+            destination: "/app/games/fetchGames",
         });
     }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {authApi, gameApi} from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import {Game} from "../types/entities.ts";
+import { Game } from '../types/entities';
+import GameWebSocket from '../services/GameWebSocket';
 
 const LobbyPage: React.FC = () => {
     const [games, setGames] = useState<Game[]>([]);
@@ -9,107 +9,85 @@ const LobbyPage: React.FC = () => {
     const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
-    // Получение списка свободных игр
-    const fetchGames = async () => {
-        try {
-            const gamesList = await authApi.fetchGames();
-            setGames(gamesList);
-        } catch (err: any) {
-            setError(err.message || 'Ошибка загрузки игр');
-        }
-    };
+    // 1) On mount, subscribe to game-list updates from the WebSocket
     useEffect(() => {
-        fetchGames();
-        const interval = setInterval(fetchGames, 5000);
-        return () => clearInterval(interval);
+        GameWebSocket.onFetchGames((fetchedGames) => {
+            setGames(fetchedGames);
+        });
+
+        // 2) Immediately request the latest games
+        GameWebSocket.fetchGames();
+
+        // (Optional) Poll every X seconds, if you want:
+        const intervalId = setInterval(() => {
+            GameWebSocket.fetchGames();
+        }, 5000);
+        return () => clearInterval(intervalId);
     }, []);
 
-    // Создание игры
-    const handleCreateGame = async (e: React.FormEvent) => {
+    // Create game
+    const handleCreateGame = (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await authApi.createGame(maxPlayers);
-            fetchGames();
+            GameWebSocket.createGame(maxPlayers);
+            // The server broadcasts on /topic/games → your subscription can update the list
         } catch (err: any) {
             setError(err.message || 'Ошибка создания игры');
         }
     };
 
-    // Присоединение к игре
-    const handleJoinGame = async (gameId: number) => {
+    // Join game
+    const handleJoinGame = (gameId: number) => {
         try {
-            await gameApi.joinGame(gameId);
+            GameWebSocket.joinGame(gameId);
+            // Also triggers broadcast on /topic/games
             navigate(`/game/${gameId}`);
         } catch (err: any) {
             setError(err.message || 'Ошибка присоединения к игре');
         }
     };
 
-    // Переход в игру при клике по строке таблицы
+    // Row click: Join & navigate
     const handleRowClick = (game: Game) => {
         localStorage.setItem("gameId", game.id.toString());
         handleJoinGame(game.id);
-        navigate(`/game/${game.id}`);
     };
 
     return (
         <div>
             <h2>Лобби</h2>
             {error && <p>{error}</p>}
-            <div>
-                <form onSubmit={handleCreateGame}>
-                    <label>Выберите количество игроков (2-4):</label>
-                    <select
-                        value={maxPlayers}
-                        onChange={(e) => setMaxPlayers(Number(e.target.value))}
-                    >
-                        {[2, 3, 4].map((num) => (
-                            <option key={num} value={num}>
-                                {num}
-                            </option>
-                        ))}
-                    </select>
-                    <button type="submit">
-                        Создать игру
-                    </button>
-                </form>
-            </div>
-            <div>
-                <h3>Доступные игры</h3>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID Игры</th>
-                        <th>Максимум игроков</th>
-                        <th>Статус</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {games.map((game) => (
-                        <tr
-                            key={game.id}
-                            onClick={() => handleRowClick(game)}
-                        >
-                            <td>{game.id}</td>
-                            <td >{game.stage}</td>
-                            <td>
-                                {/*{game.stage === 'WAITING' && (*/}
-                                {/*    <button*/}
-                                {/*        onClick={(e) => {*/}
-                                {/*            e.stopPropagation(); // чтобы не сработал клик по строке*/}
-                                {/*            handleJoinGame(game.id);*/}
-                                {/*        }}*/}
-                                {/*    >*/}
-                                {/*        Присоединиться*/}
-                                {/*    </button>*/}
-                                {/*)}*/}
-                            </td>
-                        </tr>
+
+            <form onSubmit={handleCreateGame}>
+                <label>Кол-во игроков (2-4):</label>
+                <select
+                    value={maxPlayers}
+                    onChange={(e) => setMaxPlayers(Number(e.target.value))}
+                >
+                    {[2, 3, 4].map(num => (
+                        <option key={num} value={num}>{num}</option>
                     ))}
-                    </tbody>
-                </table>
-            </div>
+                </select>
+                <button type="submit">Создать игру</button>
+            </form>
+
+            <h3>Доступные игры</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID Игры</th>
+                    <th>Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                {games.map(game => (
+                    <tr key={game.id} onClick={() => handleRowClick(game)}>
+                        <td>{game.id}</td>
+                        <td>{game.stage}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
         </div>
     );
 };
